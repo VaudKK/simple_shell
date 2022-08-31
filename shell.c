@@ -1,19 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 int main(void)
 {
-	size_t buffer_size = 1024;
-	char *buffer;
+	char *line = NULL;
+	ssize_t len = 0;
+	char *arguments[] = {"", NULL};
+	char *envp[] = {NULL};
 
-	buffer = (char *)malloc(sizeof(char) * buffer_size);
-
-	printf("cisfun# ");
-	getline(&buffer, &buffer_size,stdin);
-
-	while(1)
+	while (1)
 	{
 		printf("cisfun# ");
-		getline(&buffer, &buffer_size,stdin);
+		len = getline(&line, &len, stdin);
+
+		if (line[len -1] == '\n')
+			line[len - 1] = '\0';
+
+		if (execve(line, arguments, envp) == -1)
+		{
+			perror("./shell");
+		}
 	}
 }

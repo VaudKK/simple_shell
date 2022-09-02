@@ -1,13 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 int main(void)
 {
 	char *line = NULL;
-	ssize_t len = 0;
+	size_t len;
 	char *arguments[] = {"", NULL};
 	char *envp[] = {NULL};
+	pid_t proc_id;
+	int status;
 
 	while (1)
 	{
@@ -17,9 +20,20 @@ int main(void)
 		if (line[len -1] == '\n')
 			line[len - 1] = '\0';
 
-		if (execve(line, arguments, envp) == -1)
+		proc_id = fork();
+
+		// run the command in the child process
+		if (proc_id == 0)
 		{
-			perror("./shell");
+			if (execve(line, arguments, envp) == -1)
+			{
+				perror("./shell");
+			}
+		}
+
+		if (proc_id != 0)
+		{
+			wait(&status);
 		}
 	}
 }

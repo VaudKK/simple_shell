@@ -9,17 +9,24 @@ int main(void)
 	char *line = NULL;
 	size_t len;
 	char *token;
-	char *arguments[] = {"", NULL};
+	char **tokens;
 	char *envp[] = {NULL};
 	pid_t proc_id;
-	int status;
+	int status, i = 1;
 
 	while (1)
 	{
 		printf("cisfun# ");
 		len = getline(&line, &len, stdin);
-		token = (char *)malloc(sizeof(char) * len);
-		strtok_r(line, " ", token);
+		tokens = (char **)malloc((sizeof(char) * len) + len);
+		token = strtok(line, " ");
+		tokens[0] = token;
+		while (token != 0)
+		{
+			token = strtok(0, " ");
+			tokens[i] = token;
+			i++;
+		}
 		if (line[len -1] == '\n')
 			line[len - 1] = '\0';
 
@@ -28,7 +35,7 @@ int main(void)
 		// run the command in the child process
 		if (proc_id == 0)
 		{
-			if (execve(token[0], token, envp) == -1)
+			if (execve(tokens[0], tokens, envp) == -1)
 			{
 				perror("./shell");
 			}
@@ -37,6 +44,8 @@ int main(void)
 		if (proc_id != 0)
 		{
 			wait(&status);
+			free(tokens);
 		}
+		
 	}
 }

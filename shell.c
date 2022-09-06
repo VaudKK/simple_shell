@@ -60,7 +60,10 @@ int main(void)
 		line = getInput();
 
 		tokens = getTokens(line);
-
+		if (strcmp(tokens[0], "exit") == 0)
+		{
+			exit(0);
+		}
 		file_found = file_exists(tokens[0], &st);
 		
 		if (file_found != 0)
@@ -68,7 +71,7 @@ int main(void)
 		
 		proc_id = fork();
 		if (proc_id == 0)
-		{
+		{	
 			if (execve(tokens[0], tokens, envp) == -1)
 			{
 				perror("./shell");

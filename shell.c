@@ -70,7 +70,7 @@ int main(void)
 
 	while (1)
 	{
-		printf("cisfun# ");
+		printf("($) ");
 		line = getInput();
 
 		tokens = getTokens(line);
@@ -94,5 +94,4 @@ int main(void)
 			wait(&status);
 		}
 	}
-}
 }

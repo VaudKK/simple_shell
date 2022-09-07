@@ -11,5 +11,5 @@
  */
 int file_exists(char *file_path, struct stat *st)
 {
-	return stat(file_path, st);
+	return (stat(file_path, st));
 }

@@ -6,19 +6,29 @@
 #include <sys/stat.h>
 
 #include "main.h"
-
+/**
+ * getInput -- gets input from  user
+ *
+ * Return: the string of the line
+ */
 char *getInput()
 {
 	size_t len;
 	char *line = NULL;
+
 	len = getline(&line, &len, stdin);
 
 	if (line[len - 1] == '\n')
-		line[len - 1] ='\0';
+		line[len - 1] = '\0';
 
 	return (line);
 }
-
+/**
+ * getTokens - gets the argumenst from the line
+ * @line: the line from the user
+ *
+ * Return: pointer to tokens
+ */
 char **getTokens(char *line)
 {
 	char *tokens[20];
@@ -44,12 +54,16 @@ char **getTokens(char *line)
 
 	return (tokens_ptr);
 }
-
+/**
+ * main - executes the arguments
+ *
+ * Return: nothing
+ */
 int main(void)
 {
 	char *line = NULL;
 	char **tokens;
-	char *envp[] = {"PATH=/bin",NULL};
+	char *envp[] = {"PATH=/bin", NULL};
 	pid_t proc_id;
 	int status, file_found;
 	struct stat st;
@@ -65,13 +79,11 @@ int main(void)
 			exit(0);
 		}
 		file_found = file_exists(tokens[0], &st);
-		
 		if (file_found != 0)
 			continue;
-		
 		proc_id = fork();
 		if (proc_id == 0)
-		{	
+		{
 			if (execve(tokens[0], tokens, envp) == -1)
 			{
 				perror("./shell");
@@ -81,6 +93,6 @@ int main(void)
 		{
 			wait(&status);
 		}
-		
 	}
+}
 }

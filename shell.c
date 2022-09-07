@@ -70,14 +70,11 @@ int main(void)
 
 	while (1)
 	{
-		printf("($) ");
+		write(1, "($) ", 4);
 		line = getInput();
 
 		tokens = getTokens(line);
-		if (strcmp(tokens[0], "exit") == 0)
-		{
-			exit(0);
-		}
+		
 		file_found = file_exists(tokens[0], &st);
 		if (file_found != 0)
 			continue;
